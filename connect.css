@@ -1,0 +1,140 @@
+
+
+input{
+    border-style: dashed;
+    overflow:visible;
+    border-radius: 10px;
+    border-color: gray;
+    width: 250px;
+    height: 30px;
+    
+}
+.po{
+    border-radius: 30px;
+    
+}
+body{
+   font-family: Verdana, Geneva, Tahoma, sans-serif;    
+}
+h2{
+    font-family: 'Times New Roman', Times, serif;
+}
+
+#pb{
+   
+    background-color: #f4f3f3;
+}
+#nb{
+    container-type: 1000px;
+    background-color: blueviolet;
+
+}
+form{
+    background-color:rgb(176, 221, 182);
+    font-size: larger;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    overflow: inherit;
+}
+#lo{
+    background-color: green;
+      overflow: hidden;
+    cursor: pointer;
+    border-radius: 20px;
+    border-bottom: 50px;
+    overflow: color="blue";
+    transform: translateX(+2px);
+    box-shadow: rgb(3, 60, 247);
+    color: rgb(64, 255, 0);
+    
+    font-family: cursive;
+    width: 250px;
+    height: 30px;
+}
+#bo{
+    background-color: red;
+     overflow: hidden;
+    cursor: pointer;
+    border-radius: 20px;
+    border-bottom: 50px;
+    overflow: color="blue";
+    transform: translateX(+2px);
+    box-shadow: rgb(3, 60, 247);
+    
+    color: rgb(255, 0, 0);
+   
+    font-family: cursive;
+    width: 250px;
+    height: 30px;
+    
+    
+}
+#cl{
+    text-align: center;
+    width: 600px;
+    height: 350px;
+    
+    margin-left: 400px;
+   margin-top: 150px;
+    border-radius: 20px;
+    
+}
+#pl{
+    text-align: center;
+    width: 800px;
+    height: 500px;
+    
+    margin-left: 300px;
+   margin-top: 100px;
+    border-radius: 20px;
+}
+.trans{
+    background-color: transparent;
+}
+table{
+    text-align: center;
+    border-radius: 10;
+    border-color: transparent;
+   background-color: transparent;
+    font-display: 20px;
+}
+p{
+    color: black;
+    text-align: center;
+}
+a{
+    color: black;
+}
+h1{
+    color: rgba(0, 0, 254, 0.881);
+}
+#but{
+border-radius: 50px;
+border-color: #f4f3f4;
+background-color: #f4f3f3;
+
+}
+select{
+    border-style: dashed;
+    overflow:visible;
+    border-radius: 10px;
+    border-color: gray;
+    width: 50px;
+    height: 30px;
+}
+#lk{
+    font-size: small;
+    
+}
+textarea{
+    width: 200px;
+    height: 120px;
+}
+#reduit{
+     border-style: dashed;
+    overflow:visible;
+    border-radius: 10px;
+    border-color: gray;
+    width: 195px;
+    height: 30px;
+}
+

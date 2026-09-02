@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Espace Connexion - Ouest Pro</title>
+    <link rel="stylesheet" href="tout.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="trans">
+
+    <div class="auth-container">
+       
+        <div class="auth-tabs">
+            <button id="tab-connexion" class="tab-btn active" onclick="basculerOnglet('connexion')">SE CONNECTER</button>
+            <button id="tab-inscription" class="tab-btn" onclick="basculerOnglet('inscription')">S'INSCRIRE</button>
+        </div>
+
+        
+        <form id="form-connexion" onsubmit="seConnecter(event)">
+            <h1 align="center">Connexion à votre compte</h1>
+            <table border="1" align="center" class="auth-table">
+                <tr>
+                    <td>Adresse E-mail</td>
+                    <td><input type="email" placeholder="Ex: client@mail.com" required id="co-email"></td>
+                </tr>
+                <tr>
+                    <td>Mot de passe</td>
+                    <td><input type="password" placeholder="Votre mot de passe" required id="co-password"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <button type="submit" id="lo" onclick="seConnecter(event)">SE CONNECTER</button>
+                        <button type="button" id="bo" onclick="window.location.href='index.html'">ANNULER</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        
+        <form id="form-inscription" onsubmit="sInscrire(event)" style="display: none;">
+            <h1 align="center">Créer un compte client</h1>
+            <table border="1" align="center" class="auth-table">
+                <tr>
+                    <td>Nom</td>
+                    <td><input type="text" placeholder="Votre nom" required id="nom"></td>
+                </tr>
+                <tr>
+                    <td>Prénom</td>
+                    <td><input type="text" placeholder="Votre prénom" required id="prenom"></td>
+                </tr>
+                <tr>
+                    <td>Téléphone</td>
+                    <td><input type="tel" placeholder="Ex: 6XXXXXXXX" id="tel"></td>
+                </tr>
+                <tr>
+                    <td>Date de naissance</td>
+                    <td><input type="date"></td>
+                </tr>
+                <tr>
+                    <td>Adresse E-mail</td>
+                    <td><input type="email" placeholder="Ex: nom@mail.com" required id="in-email"></td>
+                </tr>
+                <tr>
+                    <td>Mot de passe</td>
+                    <td><input type="password" placeholder="Créer un mot de passe" required id="in-password"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <button type="submit">S'INSCRIRE</button>
+                        <button type="button" onclick="window.location.href='index.html'">ANNULER</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <script>
+        function basculerOnglet(type) {
+            const formConnexion = document.getElementById('form-connexion');
+            const formInscription = document.getElementById('form-inscription');
+            const tabConnexion = document.getElementById('tab-connexion');
+            const tabInscription = document.getElementById('tab-inscription');
+
+            if (type === 'connexion') {
+                formConnexion.style.display = 'block';
+                formInscription.style.display = 'none';
+                tabConnexion.classList.add('active');
+                tabInscription.classList.remove('active');
+            } else {
+                formConnexion.style.display = 'none';
+                formInscription.style.display = 'block';
+                tabInscription.classList.add('active');
+                tabConnexion.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
