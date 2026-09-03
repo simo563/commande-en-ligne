@@ -7,19 +7,26 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
+// Service des fichiers statiques (Site + Dossier d'upload)
+app.use(express.static(__dirname));
 
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
-
-
 app.use('/uploads', express.static(uploadDir));
 
+// Route principale
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
+// Configuration de Multer (Upload)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -30,23 +37,29 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// Connexion BDD Aiven avec SSL obligatoire
+const dbConfig = process.env.DATABASE_URL || {
+    host: 'ouestpro-db-simojulie153-3bb9.h.aivencloud.com',
+    port: 23083,
+    user: process.env.DB_USER || 'avnadmin', // Modifiez si le nom d'utilisateur diffère sur Aiven
+    password: process.env.DB_PASSWORD,       // À configurer dans l'onglet Environment sur Render
+    database: 'defaultdb',                   // Base par défaut sur Aiven (ou 'ouestpro_db' si créée)
+    ssl: { rejectUnauthorized: false }       // Obligatoire pour Aiven cloud
+};
 
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'ouestpro_db'
-});
+const db = mysql.createConnection(dbConfig);
 
 db.connect(err => {
     if (err) {
-        console.error("Erreur de connexion MySQL :", err);
-        return;
+        console.error("⚠️ Connexion MySQL échouée :", err.message);
+    } else {
+        console.log("✅ Connecté avec succès à la base de données Aiven Cloud !");
     }
-    console.log("Connecté à la base de données MySQL !");
 });
 
-// ROUTE 1 : Inscription
+// --- ROUTES API ---
+
+// Inscription
 app.post('/api/inscription', async (req, res) => {
     const { nom, prenom, tel, email, password } = req.body;
     try {
@@ -61,11 +74,11 @@ app.post('/api/inscription', async (req, res) => {
     }
 });
 
-
+// Connexion
 app.post('/api/connexion', (req, res) => {
     const { email, password } = req.body;
     db.query("SELECT * FROM utilisateurs WHERE email = ?", [email], async (err, results) => {
-        if (err || results.length === 0) return res.status(401).json({ error: "Utilisateur non trouvé." });
+        if (err || !results || results.length === 0) return res.status(401).json({ error: "Utilisateur non trouvé." });
         
         const user = results[0];
         const match = await bcrypt.compare(password, user.password);
@@ -83,7 +96,7 @@ app.post('/api/connexion', (req, res) => {
     });
 });
 
-
+// Création de commande
 app.post('/api/commandes', upload.single('fichierIndications'), (req, res) => {
     const { userId, produit, prix, details } = req.body;
     
@@ -98,11 +111,11 @@ app.post('/api/commandes', upload.single('fichierIndications'), (req, res) => {
         detailsObj = { indications: details };
     }
 
-    
     if (req.file) {
+        const hostUrl = req.protocol + '://' + req.get('host');
         detailsObj["Fichier d'indications / Pièce jointe"] = {
             nomFichier: req.file.originalname,
-            lienFichier: `http://192.168.1.200:3000/uploads/${req.file.filename}`
+            lienFichier: `${hostUrl}/uploads/${req.file.filename}`
         };
     }
 
@@ -118,7 +131,7 @@ app.post('/api/commandes', upload.single('fichierIndications'), (req, res) => {
     });
 });
 
-
+// Lecture des commandes
 app.get('/api/commandes/:userId/:role', (req, res) => {
     const { userId, role } = req.params;
 
@@ -146,11 +159,11 @@ app.get('/api/commandes/:userId/:role', (req, res) => {
             console.error("Erreur SQL Récupération :", err);
             return res.status(500).json({ error: "Erreur de récupération des commandes." });
         }
-        res.json(results);
+        res.json(results || []);
     });
 });
 
-
+// Action Admin
 app.post('/api/commandes/admin-action', (req, res) => {
     const { commandeId, statut, nouveauPrix } = req.body;
     const query = "UPDATE commandes SET statut = ?, nouveau_prix = ? WHERE id = ?";
@@ -164,7 +177,7 @@ app.post('/api/commandes/admin-action', (req, res) => {
     });
 });
 
-
+// Action Client
 app.post('/api/commandes/client-action', (req, res) => {
     const { commandeId, reponse } = req.body;
 
@@ -188,8 +201,8 @@ app.post('/api/commandes/client-action', (req, res) => {
     });
 });
 
-
-const PORT = 3000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Serveur prêt et accessible sur http://192.168.1.200:${PORT}`);
+// Démarrage du serveur
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Serveur actif sur le port ${PORT}`);
 });
