@@ -7,32 +7,26 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
-const express = require('express');
-const path = require('path');
-const app = express();
 
-// Sert tous les fichiers HTML, CSS, images de votre dossier
+// Fichiers statiques (Site Web + Dossier d'upload)
 app.use(express.static(__dirname));
-
-// Redirige la racine vers index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Serveur actif sur le port ${PORT}`));
 
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
-
-
 app.use('/uploads', express.static(uploadDir));
 
+// Route principale (Page d'accueil)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
+// Configuration de Multer (Upload de fichiers)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -43,13 +37,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'ouestpro_db'
-});
+// Connexion Base de Données
+const db = mysql.createConnection(
+    process.env.DATABASE_URL || {
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'ouestpro_db',
+        port: process.env.DB_PORT || 3306
+    }
+);
 
 db.connect(err => {
     if (err) {
@@ -59,7 +56,9 @@ db.connect(err => {
     console.log("Connecté à la base de données MySQL !");
 });
 
-// ROUTE 1 : Inscription
+// --- ROUTES API ---
+
+// Inscription
 app.post('/api/inscription', async (req, res) => {
     const { nom, prenom, tel, email, password } = req.body;
     try {
@@ -74,7 +73,7 @@ app.post('/api/inscription', async (req, res) => {
     }
 });
 
-
+// Connexion
 app.post('/api/connexion', (req, res) => {
     const { email, password } = req.body;
     db.query("SELECT * FROM utilisateurs WHERE email = ?", [email], async (err, results) => {
@@ -96,7 +95,7 @@ app.post('/api/connexion', (req, res) => {
     });
 });
 
-
+// Création de commande
 app.post('/api/commandes', upload.single('fichierIndications'), (req, res) => {
     const { userId, produit, prix, details } = req.body;
     
@@ -111,11 +110,11 @@ app.post('/api/commandes', upload.single('fichierIndications'), (req, res) => {
         detailsObj = { indications: details };
     }
 
-    
     if (req.file) {
+        const hostUrl = req.protocol + '://' + req.get('host');
         detailsObj["Fichier d'indications / Pièce jointe"] = {
             nomFichier: req.file.originalname,
-            lienFichier: `http://192.168.1.200:3000/uploads/${req.file.filename}`
+            lienFichier: `${hostUrl}/uploads/${req.file.filename}`
         };
     }
 
@@ -131,7 +130,7 @@ app.post('/api/commandes', upload.single('fichierIndications'), (req, res) => {
     });
 });
 
-
+// Lecture des commandes
 app.get('/api/commandes/:userId/:role', (req, res) => {
     const { userId, role } = req.params;
 
@@ -163,7 +162,7 @@ app.get('/api/commandes/:userId/:role', (req, res) => {
     });
 });
 
-
+// Action Admin
 app.post('/api/commandes/admin-action', (req, res) => {
     const { commandeId, statut, nouveauPrix } = req.body;
     const query = "UPDATE commandes SET statut = ?, nouveau_prix = ? WHERE id = ?";
@@ -177,7 +176,7 @@ app.post('/api/commandes/admin-action', (req, res) => {
     });
 });
 
-
+// Action Client
 app.post('/api/commandes/client-action', (req, res) => {
     const { commandeId, reponse } = req.body;
 
@@ -201,8 +200,8 @@ app.post('/api/commandes/client-action', (req, res) => {
     });
 });
 
-
-const PORT = 3000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Serveur prêt et accessible sur http://192.168.1.200:${PORT}`);
+// Démarrage du serveur (Dynamic Port pour Render)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Serveur actif sur le port ${PORT}`);
 });
