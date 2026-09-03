@@ -5,6 +5,12 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const express = require('express');
+const app = express();
+const path = require('path');
+
+// Servir les fichiers statiques (index.html, CSS, images...)
+app.use(express.static(__dirname));
 
 const app = express();
 app.use(cors());
