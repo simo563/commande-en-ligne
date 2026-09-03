@@ -50,10 +50,11 @@ const db = mysql.createConnection(
 
 db.connect(err => {
     if (err) {
-        console.error("Erreur de connexion MySQL :", err);
-        return;
+        console.error("⚠️ Impossible de se connecter à MySQL :", err.message);
+        console.log("Le serveur reste actif pour servir les pages Web.");
+    } else {
+        console.log("✅ Connecté à la base de données MySQL !");
     }
-    console.log("Connecté à la base de données MySQL !");
 });
 
 // --- ROUTES API ---
