@@ -1,6 +1,5 @@
 const API_URL = "http://192.168.1.200:3000/api";
 
-
 function getSessionUser() {
     return JSON.parse(localStorage.getItem('currentUser')) || null;
 }
@@ -9,7 +8,6 @@ function deconnexion() {
     localStorage.removeItem('currentUser');
     window.location.href = "connect.html";
 }
-
 
 async function sInscrire(event) {
     event.preventDefault();
@@ -48,7 +46,6 @@ async function sInscrire(event) {
     }
 }
 
-
 async function seConnecter(event) {
     event.preventDefault();
     
@@ -85,7 +82,6 @@ async function seConnecter(event) {
     }
 }
 
-
 function afficherDetailsComplets(details) {
     if (!details) return "<p><em>Aucun détail fourni.</em></p>";
     
@@ -105,7 +101,6 @@ function afficherDetailsComplets(details) {
     html += "</ul>";
     return html;
 }
-
 
 function genererCardClient(cmd) {
     let blocProposition = "";
@@ -247,7 +242,6 @@ async function actionClient(commandeId, reponse) {
 
 document.addEventListener('DOMContentLoaded', chargerNotifications);
 
-
 async function traiterCommande(event, typeProduit, prixUnitaire) {
     event.preventDefault();
     const currentUser = getSessionUser();
@@ -310,8 +304,6 @@ async function traiterCommande(event, typeProduit, prixUnitaire) {
         alert("Impossible de joindre le serveur backend.");
     }
 }
-
-
 
 function rapel() {
     alert("Vous devez d'abord vous inscrire.");
@@ -545,13 +537,13 @@ function broderisup(){
     document.write('</select></td></tr>');
     document.write('<tr><td style="padding: 8px;"><b>date et heure livraison :</b></td><td style="padding: 8px;"><input type="time" style="width: 100%;"><input type="date" style="width: 100%;"></td></tr>');
     document.write('<tr><td style="padding: 8px;"><b>nombre de broderie :</b></td><td style="padding: 8px;"><input type="number" style="width: 100%;"></td></tr>');
- document.write('<tr><td colspan="2" style="text-align: center; padding-top: 20px;"><input type="submit" value="Valider les informations" style="background:blue; color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;"></td></tr>');
-    document.write('<form onsubmit="traiterCommande(event, \'Broderie Pantalon\', 2500)"><table style="width: 100%; border-collapse: collapse;">');    document.write('</table></form></FIELDSET>');
+    document.write('<tr><td colspan="2" style="text-align: center; padding-top: 20px;"><input type="submit" value="Valider les informations" style="background:blue; color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;"></td></tr>');
+    document.write('</table></form></FIELDSET>');
 
     document.write('<FIELDSET style="width: 60%; background: rgb(223,255,223); border: none; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); padding: 25px; margin: 25px auto; max-width: 1200px;">');   
     document.write('<LEGEND><b align="center"><font color="#1b38f4">Informations pour votre pantalon</font></b></LEGEND>');
     document.write('<form onsubmit="traiterCommande(event, \'Broderie Pantalon\', 2500)"><table style="width: 100%; border-collapse: collapse;">');
-    document.write('<tr><td style="padding: 8px;" rowspan="3"><b>element a broder :</b></td><td style="padding: 8px;"><input type="file" accept="image/*"></td>');
+    document.write('<tr><td style="padding: 8px;" rowspan="3"><b>element a broder :</b></td><td style="padding: 8px;"><input type="file" accept="image/*"></td></tr>');
     document.write('<tr><td style="padding: 8px;"><input type="file" accept="image/*"></td></tr>');
     document.write('<tr><td style="padding: 8px;"><input type="file" accept="image/*"></td></tr>');
     document.write('<tr><td style="padding: 8px;"><b>Texte descriptif ou details :</b></td><td style="padding: 8px;"><textarea rows="3" style="width: 100%;">vous pouvez saisir la position de flocage donner des indication sur voc fichier</textarea></td></tr>');
@@ -570,7 +562,6 @@ function broderisup(){
     document.write('<option value="maron">maron</option>');
     document.write('<option value="kaki">kaki</option>');
     document.write('</select></td></tr>');
-    
     document.write('<tr><td style="padding: 8px;"><b>Qualité du support :</b></td><td style="padding: 8px;">');
     document.write('<select name="QualiteSupport" style="width: 100%; padding: 5px;">');
     document.write('<option value="qualite 1">Qualite 1</option>');
@@ -579,7 +570,6 @@ function broderisup(){
     document.write('<tr><td style="padding: 8px;"><b>nombre de broderie :</b></td><td style="padding: 8px;"><input type="number" style="width: 100%;"></td></tr>');
     document.write('<tr><td style="padding: 8px;"><b>date et heure livraison :</b></td><td style="padding: 8px;"><input type="time" style="width: 100%;"><input type="date" style="width: 100%;"></td></tr>');
     document.write('<tr><td colspan="2" style="text-align: center; padding-top: 20px;"><input type="submit" value="Valider les informations" style="background:blue; color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;"></td></tr>');
-    document.write('<form onsubmit="traiterCommande(event, \'Broderie Pantalon\', 2500)"><table style="width: 100%; border-collapse: collapse;">');
     document.write('</table></form></FIELDSET>');
 }
 
@@ -631,7 +621,6 @@ function flocage(){
     document.write('<option value="LAZER">LAZER</option>');
     document.write('<option value="sublimation">SUBLIMATION</OPTION>');
     document.write('</select></td></tr>');
-    
     document.write('<tr><td style="padding: 8px;"><b>Qualité du support :</b></td><td style="padding: 8px;">');
     document.write('<select name="QualiteSupport" style="width: 100%; padding: 5px;">');
     document.write('<option value="qualite 1">Qualite 1</option>');
@@ -750,26 +739,26 @@ function broderisimp() {
     document.write('</select></td></tr>');
     document.write('<tr><td style="padding: 8px;" rowspan="3"><b>Emplacement :</b></td><td style="padding: 8px;">');
     document.write('<select style="width: 100%; padding: 5px;">');
-    document.write('   <option value="Cœur (Côté gauche)">Cœur (Côté gauche)</option>');
-    document.write('  <option value="Centré Face">Centré Face</option>');
-    document.write(' <option value="Grand Dos">Grand Dos</option>');
-    document.write(' <option value="Manche">Manche</option>');
-    document.write(' <option value="Plusieurs emplacements">Plusieurs emplacements</option>');
+    document.write('<option value="Cœur (Côté gauche)">Cœur (Côté gauche)</option>');
+    document.write('<option value="Centré Face">Centré Face</option>');
+    document.write('<option value="Grand Dos">Grand Dos</option>');
+    document.write('<option value="Manche">Manche</option>');
+    document.write('<option value="Plusieurs emplacements">Plusieurs emplacements</option>');
     document.write('</select></td></tr>');
     document.write('<tr><td><select style="width: 100%; padding: 5px;">');
-    document.write('   <option value="Cœur (Côté gauche)">Cœur (Côté gauche)</option>');
-    document.write('  <option value="Centré Face">Centré Face</option>');
-    document.write(' <option value="Grand Dos">Grand Dos</option>');
-    document.write(' <option value="Manche">Manche</option>');
-    document.write(' <option value="Plusieurs emplacements">Plusieurs emplacements</option>');
-    document.write('</select></td>');
+    document.write('<option value="Cœur (Côté gauche)">Cœur (Côté gauche)</option>');
+    document.write('<option value="Centré Face">Centré Face</option>');
+    document.write('<option value="Grand Dos">Grand Dos</option>');
+    document.write('<option value="Manche">Manche</option>');
+    document.write('<option value="Plusieurs emplacements">Plusieurs emplacements</option>');
+    document.write('</select></td></tr>');
     document.write('<tr><td><select style="width: 100%; padding: 5px;">');
-    document.write('   <option value="Cœur (Côté gauche)">Cœur (Côté gauche)</option>');
-    document.write('  <option value="Centré Face">Centré Face</option>');
-    document.write(' <option value="Grand Dos">Grand Dos</option>');
-    document.write(' <option value="Manche">Manche</option>');
-    document.write(' <option value="Plusieurs emplacements">Plusieurs emplacements</option>');
-    document.write('</select></td>');
+    document.write('<option value="Cœur (Côté gauche)">Cœur (Côté gauche)</option>');
+    document.write('<option value="Centré Face">Centré Face</option>');
+    document.write('<option value="Grand Dos">Grand Dos</option>');
+    document.write('<option value="Manche">Manche</option>');
+    document.write('<option value="Plusieurs emplacements">Plusieurs emplacements</option>');
+    document.write('</select></td></tr>');
     document.write('<tr><td style="padding: 8px;" rowspan="3"><b>Photo de profil / Logo :</b></td><td style="padding: 8px;"><input type="file" name="fichierIndications" accept="image/*"></td></tr>');
     document.write('<tr><td style="padding: 8px;"><input type="file" accept="image/*"></td></tr>');
     document.write('<tr><td style="padding: 8px;"><input type="file" accept="image/*"></td></tr>');
@@ -805,7 +794,6 @@ function broderisimp() {
     document.write('<option value="maron">maron</option>');
     document.write('<option value="kaki">kaki</option>');
     document.write('</select></td></tr>');
-    
     document.write('<tr><td style="padding: 8px;"><b>Qualité du support :</b></td><td style="padding: 8px;">');
     document.write('<select name="QualiteSupport" style="width: 100%; padding: 5px;">');
     document.write('<option value="qualite 1">Qualite 1</option>');
@@ -814,7 +802,7 @@ function broderisimp() {
     document.write('<tr><td style="padding: 8px;"><b>nombre de broderie :</b></td><td style="padding: 8px;"><input type="number" style="width: 100%;"></td></tr>');
     document.write('<tr><td style="padding: 8px;"><b>date et heure livraison :</b></td><td style="padding: 8px;"><input type="time" style="width: 100%;"><input type="date" style="width: 100%;"></td></tr>');
     document.write('<tr><td colspan="2" style="text-align: center; padding-top: 20px;"><input type="submit" value="Valider les informations" style="background:blue; color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;"></td></tr>');
-    document.write('<form onsubmit="traiterCommande(event, \'Broderie Simple\', 2500)">...')
+    document.write('</table></form></FIELDSET>');
 }
 
 function formulairCatalogueBanniere() {
