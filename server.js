@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Fichiers statiques (Site Web + Dossier d'upload)
+// Service des fichiers statiques (Site + Dossier d'upload)
 app.use(express.static(__dirname));
 
 const uploadDir = path.join(__dirname, 'uploads');
@@ -21,12 +21,12 @@ if (!fs.existsSync(uploadDir)) {
 }
 app.use('/uploads', express.static(uploadDir));
 
-// Route principale (Page d'accueil)
+// Route principale
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Configuration de Multer (Upload de fichiers)
+// Configuration de Multer (Upload)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -37,23 +37,23 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Connexion Base de Données
-const db = mysql.createConnection(
-    process.env.DATABASE_URL || {
-        host: process.env.DB_HOST || 'localhost',
-        user: process.env.DB_USER || 'root',
-        password: process.env.DB_PASSWORD || '',
-        database: process.env.DB_NAME || 'ouestpro_db',
-        port: process.env.DB_PORT || 3306
-    }
-);
+// Connexion BDD Aiven avec SSL obligatoire
+const dbConfig = process.env.DATABASE_URL || {
+    host: 'ouestpro-db-simojulie153-3bb9.h.aivencloud.com',
+    port: 23083,
+    user: process.env.DB_USER || 'avnadmin', // Modifiez si le nom d'utilisateur diffère sur Aiven
+    password: process.env.DB_PASSWORD,       // À configurer dans l'onglet Environment sur Render
+    database: 'defaultdb',                   // Base par défaut sur Aiven (ou 'ouestpro_db' si créée)
+    ssl: { rejectUnauthorized: false }       // Obligatoire pour Aiven cloud
+};
+
+const db = mysql.createConnection(dbConfig);
 
 db.connect(err => {
     if (err) {
-        console.error("⚠️ Impossible de se connecter à MySQL :", err.message);
-        console.log("Le serveur reste actif pour servir les pages Web.");
+        console.error("⚠️ Connexion MySQL échouée :", err.message);
     } else {
-        console.log("✅ Connecté à la base de données MySQL !");
+        console.log("✅ Connecté avec succès à la base de données Aiven Cloud !");
     }
 });
 
@@ -78,7 +78,7 @@ app.post('/api/inscription', async (req, res) => {
 app.post('/api/connexion', (req, res) => {
     const { email, password } = req.body;
     db.query("SELECT * FROM utilisateurs WHERE email = ?", [email], async (err, results) => {
-        if (err || results.length === 0) return res.status(401).json({ error: "Utilisateur non trouvé." });
+        if (err || !results || results.length === 0) return res.status(401).json({ error: "Utilisateur non trouvé." });
         
         const user = results[0];
         const match = await bcrypt.compare(password, user.password);
@@ -159,7 +159,7 @@ app.get('/api/commandes/:userId/:role', (req, res) => {
             console.error("Erreur SQL Récupération :", err);
             return res.status(500).json({ error: "Erreur de récupération des commandes." });
         }
-        res.json(results);
+        res.json(results || []);
     });
 });
 
@@ -201,7 +201,7 @@ app.post('/api/commandes/client-action', (req, res) => {
     });
 });
 
-// Démarrage du serveur (Dynamic Port pour Render)
+// Démarrage du serveur
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serveur actif sur le port ${PORT}`);
