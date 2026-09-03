@@ -5,17 +5,24 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const express = require('express');
-const app = express();
-const path = require('path');
-
-// Servir les fichiers statiques (index.html, CSS, images...)
-app.use(express.static(__dirname));
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+const express = require('express');
+const path = require('path');
+const app = express();
 
+// Sert tous les fichiers HTML, CSS, images de votre dossier
+app.use(express.static(__dirname));
+
+// Redirige la racine vers index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Serveur actif sur le port ${PORT}`));
 
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
